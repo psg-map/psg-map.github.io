@@ -8,41 +8,53 @@
 <style>
 :root{
   --bg:#f7f5f1; --panel:#ffffff; --fg:#231c16; --muted:#7a6e63; --line:#e6dfd6;
-  --soy:#6b3f1f; --soy-soft:#f1e6dc; --jade:#2f6f5e; --gold:#b5832a; --grid:#ece5dc;
+  --soy:#6b3f1f; --soy-soft:#f1e6dc; --jade:#2f6f5e; --jade-soft:#e3efe9; --gold:#a8771f; --grid:#ece5dc;
   --display:"Do Hyeon","IBM Plex Sans KR",system-ui,sans-serif;
   --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
   --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme: dark){:root{
   --bg:#17130f; --panel:#201a15; --fg:#efe7de; --muted:#a89a8c; --line:#352c24;
-  --soy:#e0a274; --soy-soft:#3a2a1d; --jade:#6cc2a8; --gold:#e0b45a; --grid:#2a221c; color-scheme:dark}}
+  --soy:#e0a274; --soy-soft:#3a2a1d; --jade:#6cc2a8; --jade-soft:#1d2e28; --gold:#e0b45a; --grid:#2a221c; color-scheme:dark}}
 *{box-sizing:border-box}
 html,body{margin:0}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;line-height:1.55;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+a{color:var(--jade)}
 .wrap{max-width:1280px;margin:0 auto;display:grid;gap:16px}
-header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
 h1{font-family:var(--display);font-weight:400;font-size:32px;line-height:1.1;margin:0;color:var(--soy)}
 .sub{color:var(--muted);font-size:13px;margin:4px 0 0}
 .search{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
-.search input[type=text]{flex:1 1 220px;min-width:0;font:inherit;font-size:15px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
-select,.sm{font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+.search input[type=text]{flex:1 1 240px;min-width:0;font:inherit;font-size:15px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+select{font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
 .go{font:inherit;font-size:14px;font-weight:600;border:0;border-radius:8px;padding:9px 18px;background:var(--soy);color:var(--bg);cursor:pointer}
 .go:disabled{opacity:.5;cursor:wait}
 label.ck{display:flex;gap:5px;align-items:center;font-size:13px;color:var(--muted);cursor:pointer}
 #msg{width:100%;font-size:12.5px;color:var(--muted);margin:0}
 #msg.err{color:#c0392b}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-.stat .k{font-size:12px;color:var(--muted)}
-.stat .v{font-family:var(--display);font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}
-.stat .v small{font-family:var(--body);font-size:13px;color:var(--muted);margin-left:2px}
-.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start}
+.official{background:var(--jade-soft);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:12px}
+.official .head{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;justify-content:space-between}
+.official h2{margin:0;font-family:var(--display);font-weight:400;font-size:22px;color:var(--jade)}
+.badge{font-size:11.5px;font-weight:600;color:var(--jade);border:1px solid var(--jade);border-radius:999px;padding:1px 9px}
+.figs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.fig{background:var(--panel);border-radius:10px;padding:12px 14px}
+.fig .k{font-size:12px;color:var(--muted)}
+.fig .v{font-family:var(--display);font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}
+.fig .v small{font-family:var(--body);font-size:13px;color:var(--muted);margin-left:2px}
+.fig .d{font-size:12px;color:var(--muted)}
+.official .src{font-size:12px;color:var(--muted);margin:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.empty{display:grid;gap:10px}
+.empty p{margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:8px;padding:7px 12px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:var(--jade);border-color:var(--jade);color:var(--panel);font-weight:600}
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:16px;align-items:start}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;min-width:0;overflow:hidden}
 #map{height:560px;background:var(--grid)}
-.hint{font-size:12px;color:var(--muted);padding:8px 14px}
-.ph{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.hint{font-size:12px;color:var(--muted);padding:8px 14px;margin:0}
+.ph{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:space-between;align-items:baseline;padding:12px 14px;border-bottom:1px solid var(--line)}
 .ph h2{font-size:15px;margin:0;font-weight:600}
+.ph span{font-size:12px;color:var(--muted)}
 .tablebox{overflow:auto;max-height:560px}
 table{width:100%;border-collapse:collapse;font-size:13px}
 th{position:sticky;top:0;background:var(--panel);text-align:left;font-weight:500;font-size:12px;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;z-index:1}
@@ -52,69 +64,44 @@ tr.sel td{background:var(--soy-soft)}
 .nm{font-weight:600;cursor:pointer}
 .nm:hover{color:var(--soy)}
 .ad{font-size:12px;color:var(--muted)}
-.ad a{color:var(--jade);text-decoration:none}
+.ad a{text-decoration:none}
 .tag{display:inline-block;font-size:11px;padding:0 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);margin-left:6px;vertical-align:1px}
-.sales{width:92px;font:inherit;font-family:var(--mono);font-size:13px;text-align:right;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+.in{display:block;width:100px;font:inherit;font-family:var(--mono);font-size:12.5px;text-align:right;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+.in.rv{border-style:dashed;margin-top:4px}
+.est{display:block;font-size:11.5px;color:var(--gold);margin-top:3px;white-space:nowrap}
+.real{display:block;font-size:11.5px;color:var(--jade);margin-top:3px}
 .foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;padding:10px 14px;font-size:12px;color:var(--muted)}
-.btn{font:inherit;font-size:12.5px;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:6px;padding:6px 10px;cursor:pointer}
-.base{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:var(--soy-soft);border:1px solid var(--line);border-radius:12px;padding:12px}
-.base b{font-weight:600}
-.base input{width:120px;font:inherit;font-family:var(--mono);font-size:15px;text-align:right;padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--fg)}
-.base .ad{flex-basis:100%}
-.lv{display:inline-flex;gap:2px;margin-top:4px}
-.lv button{font:inherit;font-size:11px;padding:1px 7px;border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;cursor:pointer}
-.lv button[aria-pressed="true"]{background:var(--soy);border-color:var(--soy);color:var(--bg)}
-.est{display:block;font-size:11px;color:var(--gold);margin-top:2px}
-.sales.is-est{color:var(--gold)}
-.note{font-size:12.5px;color:var(--muted);line-height:1.65;max-width:75ch;margin:0}
+.note{font-size:12.5px;color:var(--muted);line-height:1.7;max-width:80ch;margin:0}
+.note b{color:var(--fg);font-weight:600}
 .pin{width:14px;height:14px;border-radius:50%;background:var(--soy);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.45);cursor:pointer}
 .pin.sel{width:20px;height:20px;background:var(--gold)}
 .iw{padding:8px 10px;font-size:12px;line-height:1.5;min-width:170px;color:#222}
-#keybox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-#keybox[hidden]{display:none}
 :focus-visible{outline:2px solid var(--jade);outline-offset:2px}
-@media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}#map{height:380px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.tablebox{max-height:none}}
-@media (max-width:520px){h1{font-size:26px}.hide-s{display:none}}
+@media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}#map{height:380px}.figs{grid-template-columns:repeat(2,minmax(0,1fr))}.tablebox{max-height:none}}
+@media (max-width:520px){h1{font-size:26px}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div>
-      <h1>족발 상권지도</h1>
-      <p class="sub">전국 어디든 동네 이름을 넣으면 주변 족발·보쌈집과 거리를 보여줍니다</p>
-    </div>
+    <h1>족발 상권지도</h1>
+    <p class="sub">창업 후보지 주소를 넣으면 그 동네 족발·보쌈 공식 매출 통계와 주변 경쟁점을 보여줍니다</p>
   </header>
 
-  <div id="keybox" hidden>
-    <span class="ad" style="flex-basis:100%">카카오 JavaScript 키를 한 번만 넣어주세요. 이 기기에 저장됩니다.</span>
-    <input id="keyIn" class="sm" type="password" style="flex:1 1 240px" placeholder="JavaScript 키">
-    <button class="go" id="keyGo">지도 열기</button>
-  </div>
-
   <form class="search" id="form">
-    <input type="text" id="q" value="원주시 문막읍" placeholder="예: 서울 문래동, 부산 서면, 원주시 문막읍" aria-label="지역">
-    <select id="radius" aria-label="반경">
+    <input type="text" id="q" value="원주시 문막읍" placeholder="창업 후보지 주소 · 예: 서울 영등포구 문래동, 부산 서면, 원주시 문막읍" aria-label="창업 후보지 주소">
+    <select id="radius" aria-label="경쟁점 반경">
       <option value="1000">1km</option><option value="2000">2km</option>
       <option value="3000" selected>3km</option><option value="5000">5km</option><option value="10000">10km</option>
     </select>
     <label class="ck"><input type="checkbox" id="bossam" checked> 보쌈 포함</label>
     <button class="go" id="go" type="submit">찾기</button>
-    <p id="msg">지역을 넣고 찾기를 누르세요. 지도를 누르면 그 지점 기준으로 다시 찾습니다.</p>
+    <p id="msg">주소를 넣고 찾기를 누르세요. 지도를 누르면 그 지점 기준으로 다시 찾습니다.</p>
   </form>
 
-  <section class="base" aria-label="추정 매출 기준">
-    <label for="base"><b id="baseLabel">이 지역</b> 족발·보쌈 평균 월매출</label>
-    <span><input id="base" type="number" min="0" step="100" inputmode="numeric" placeholder="예: 2500"> 만원</span>
-    <span class="ad" id="autoNote" hidden></span>
-    <span class="ad">한 번 넣으면 모든 가게에 추정 매출이 자동으로 채워집니다. 값은 <a href="https://bigdata.sbiz.or.kr" target="_blank" rel="noopener">소상공인365</a> → 상권분석에서 이 동네 '족발/보쌈' 평균 매출을 보고 넣으세요. 가게마다 많음/보통/적음을 누르면 ×1.5 / ×1 / ×0.6으로 조정되고, 실제 매출을 알면 칸에 직접 덮어쓰면 됩니다.</span>
-  </section>
-
-  <section class="stats">
-    <div class="stat"><div class="k">반경 안 업체</div><div class="v" id="sN">0<small>곳</small></div></div>
-    <div class="stat"><div class="k">1km 안 업체</div><div class="v" id="s1">0<small>곳</small></div></div>
-    <div class="stat"><div class="k">평균 월매출 (추정 포함)</div><div class="v" id="sAvg">-<small>만원</small></div></div>
-    <div class="stat"><div class="k">합계 월매출 (추정 포함)</div><div class="v" id="sSum">-<small>만원</small></div></div>
+  <section class="official" id="official" aria-live="polite">
+    <div class="head"><h2 id="offTitle">동네 공식 통계</h2><span class="badge">소상공인365 공식 통계</span></div>
+    <div id="offBody"><p class="note">주소를 검색하면 그 동네(행정동·읍·면) 통계가 여기에 나옵니다.</p></div>
   </section>
 
   <div class="main">
@@ -123,69 +110,62 @@ tr.sel td{background:var(--soy-soft)}
       <p class="hint">빈 곳을 누르면 그 지점이 기준점이 됩니다. 창업 예정지를 찍어 보세요.</p>
     </section>
     <section class="panel">
-      <div class="ph"><h2 id="listTitle">업체 목록</h2></div>
+      <div class="ph"><h2 id="listTitle">주변 경쟁점</h2><span id="listSub">카카오맵 등록 기준</span></div>
       <div class="tablebox">
         <table>
-          <thead><tr><th data-k="d">거리</th><th data-k="name">상호 / 주소</th><th data-k="sales">월매출(만원)</th></tr></thead>
+          <thead><tr><th data-k="d">거리</th><th data-k="name">상호 / 주소</th><th data-k="sales">매출 (만원/월)</th></tr></thead>
           <tbody id="tb"><tr><td colspan="3" class="ad" style="padding:16px">검색하면 여기에 표시됩니다.</td></tr></tbody>
         </table>
       </div>
       <div class="foot">
-        <span id="toast">매출은 이 기기 브라우저에 저장됩니다.</span>
-        <span style="display:flex;gap:6px"><button class="btn" id="copy">목록 복사(엑셀용)</button><button class="btn" id="csv">CSV 저장</button></span>
+        <span id="toast">입력값은 이 기기 브라우저에 저장됩니다.</span>
+        <span class="btns"><button class="btn" id="copy" type="button">목록 복사(엑셀용)</button><button class="btn" id="csv" type="button">CSV 저장</button></span>
       </div>
     </section>
   </div>
 
-  <p class="note">노란 숫자는 지역 평균 × 가게 조정값으로 계산한 추정치이고, 실제 매출이 아닙니다. 가게별 실제 매출은 공개되지 않으니 배달앱 리뷰 수나 오픈업 등에서 확인한 값으로 많음/보통/적음을 고르거나 직접 덮어쓰세요. 목록은 카카오맵에 등록된 가게 기준이라 배달만 하는 가게는 빠질 수 있습니다.</p>
+  <p class="note">
+    <b>공식 통계</b>는 소상공인365(소상공인시장진흥공단)가 카드 매출 등으로 집계한 동네별 족발/보쌈 업소당 월평균 매출과 업소 수이며, 매달 1일 자동으로 갱신됩니다. 공단 분류 기준이라 업소 수가 카카오맵 경쟁점 수와 다를 수 있습니다.<br>
+    <b>가게별 매출은 공개된 팩트 데이터가 없습니다.</b> 노란색 "참고 추정"은 배달앱 리뷰 수를 2곳 이상 넣었을 때 공식 평균을 리뷰 비율로 나눈 값이고, 초록색 "확인 매출"은 직접 확인한 실제 매출을 넣는 칸입니다.
+  </p>
 </div>
 
 <script>
 const KAKAO_KEY = "b8438f5ef4ac393f8515e92a00bc8b7e";   // 카카오 JavaScript 키 (상권분석 앱)
+const REPO = "psg-map/psg-map.github.io";
 
 const $=id=>document.getElementById(id);
 const st={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let sales=st.get("jk_sales",{});
-let bases=st.get("jk_base",{}), levels=st.get("jk_lvl",{}), auto={};
-fetch("bases.json?"+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.areas){auto=j.areas;if(center){syncBase();render()}}}).catch(()=>{});
-const baseFor=k=>bases[k]!=null?bases[k]:(auto[k]?auto[k].avg:null);
-const MULT={hi:1.5,mid:1,lo:0.6}, LVN={hi:"많음",mid:"보통",lo:"적음"};
-const areaKey=()=>center?(shortArea(center.label)||center.label):"";
-function syncBase(){const k=areaKey();$("baseLabel").textContent=k||"이 지역";$("base").value=bases[k]??"";
-  const a=auto[k], n=$("autoNote");
-  if(a){n.hidden=false;n.textContent=(bases[k]!=null?"직접 넣은 값을 쓰는 중 · 칸을 비우면 ":"")+"소상공인365 자동값 "+a.avg.toLocaleString()+"만원 ("+a.asof.replace("-","년 ")+"월 기준"+(a.scope?", "+a.scope:"")+")";$("base").placeholder=a.avg}
-  else{n.hidden=true;$("base").placeholder="예: 2500"}}
-$("base").addEventListener("change",()=>{const k=areaKey();if(!k)return;const v=$("base").value;if(v==="")delete bases[k];else bases[k]=+v;st.set("jk_base",bases);render();$("toast").textContent=v===""?"평균 매출을 지웠어요.":"추정 매출을 채웠어요."});
-let map,ps,geo,info,centerMk,circle,overlays=[],rows=[],center=null,selected=null,sortKey="d",sortAsc=true,busy=false;
+let real=st.get("jk_sales",{}), reviews=st.get("jk_rv",{}), stats={}, statsLoaded=false;
+let map,ps,geo,info,centerMk,circle,overlays=[],rows=[],center=null,region=null,selected=null,sortKey="d",sortAsc=true,busy=false;
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmtD=m=>m<1000?Math.round(m)+"m":(m/1000).toFixed(1)+"km";
+const won=v=>v>=10000?(v/10000).toFixed(v%10000?1:0)+"<small>억원</small>":Math.round(v).toLocaleString()+"<small>만원</small>";
 function dist(a,b,c,d){const R=6371000,t=Math.PI/180;const h=Math.sin((c-a)*t/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin((d-b)*t/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
 function msg(t,err){$("msg").textContent=t;$("msg").className=err?"err":""}
 
+fetch("bases.json?"+Date.now()).then(r=>r.ok?r.json():null).then(j=>{stats=(j&&j.areas)||{};statsLoaded=true;renderOfficial();if(rows.length)render()}).catch(()=>{statsLoaded=true;renderOfficial()});
+
 // ---------- 카카오 SDK ----------
 function start(){
-  const key=KAKAO_KEY||st.get("jk_key","");
-  if(!key){$("keybox").hidden=false;return}
   const s=document.createElement("script");
-  s.src="https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&libraries=services&appkey="+encodeURIComponent(key);
+  s.src="https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&libraries=services&appkey="+KAKAO_KEY;
   s.onload=()=>kakao.maps.load(init);
-  s.onerror=()=>{msg("카카오지도를 불러오지 못했어요. 카카오 개발자 사이트의 플랫폼 → Web 사이트 도메인에 "+location.origin+" 이 등록됐는지, 키가 JavaScript 키인지 확인해 주세요.",true);if(!KAKAO_KEY)$("keybox").hidden=false};
+  s.onerror=()=>msg("카카오지도를 불러오지 못했어요. 잠시 뒤 새로고침해 주세요.",true);
   document.head.appendChild(s);
 }
-$("keyGo").onclick=()=>{const k=$("keyIn").value.trim();if(!k)return;st.set("jk_key",k);$("keybox").hidden=true;start()};
-
 function init(){
-  map=new kakao.maps.Map($("map"),{center:new kakao.maps.LatLng(37.3205,127.827),level:6});
+  map=new kakao.maps.Map($("map"),{center:new kakao.maps.LatLng(37.3126,127.8172),level:6});
   map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
   map.addControl(new kakao.maps.MapTypeControl(),kakao.maps.ControlPosition.TOPRIGHT);
   ps=new kakao.maps.services.Places();geo=new kakao.maps.services.Geocoder();
   info=new kakao.maps.InfoWindow({removable:true});
-  kakao.maps.event.addListener(map,"click",e=>{if(busy)return;setCenter(e.latLng.getLat(),e.latLng.getLng(),"찍은 위치");run()});
+  kakao.maps.event.addListener(map,"click",async e=>{if(busy)return;await setCenter(e.latLng.getLat(),e.latLng.getLng(),"찍은 위치");run()});
   const last=st.get("jk_q",null); if(last) $("q").value=last;
   $("form").requestSubmit();
 }
 
-// ---------- 지역 → 좌표 ----------
+// ---------- 주소 → 좌표 → 행정동 ----------
 function locate(q){
   return new Promise(res=>{
     geo.addressSearch(q,(r,s)=>{
@@ -197,29 +177,70 @@ function locate(q){
     });
   });
 }
-function setCenter(y,x,label){
+function regionOf(y,x){
+  return new Promise(res=>{
+    geo.coord2RegionCode(x,y,(r,s)=>{
+      if(s!==kakao.maps.services.Status.OK||!r.length) return res(null);
+      const h=r.find(a=>a.region_type==="H")||r[0];
+      res({key:(h.region_2depth_name+" "+h.region_3depth_name).trim(),dong:h.region_3depth_name,sigungu:h.region_2depth_name,query:h.address_name});
+    });
+  });
+}
+async function setCenter(y,x,label){
   center={y,x,label};
+  region=await regionOf(y,x);
   const ll=new kakao.maps.LatLng(y,x);
   if(centerMk) centerMk.setMap(null); if(circle) circle.setMap(null);
   centerMk=new kakao.maps.Marker({position:ll,map});
   circle=new kakao.maps.Circle({center:ll,radius:+$("radius").value,strokeWeight:1,strokeColor:"#6b3f1f",strokeStyle:"dash",fillColor:"#6b3f1f",fillOpacity:.06,map});
+  renderOfficial();
 }
-
 $("form").addEventListener("submit",async e=>{
   e.preventDefault(); if(!map||busy) return;
   const q=$("q").value.trim(); if(!q) return;
   msg("위치 찾는 중…");
   const c=await locate(q);
-  if(!c) return msg('"'+q+'" 위치를 찾지 못했어요. "서울 문래동"처럼 시·구·동을 함께 적어보세요.',true);
+  if(!c) return msg('"'+q+'" 위치를 찾지 못했어요. "서울 영등포구 문래동"처럼 시·구·동을 함께 적어보세요.',true);
   st.set("jk_q",q);
-  setCenter(c.y,c.x,c.label);
+  await setCenter(c.y,c.x,c.label);
   run();
 });
-$("radius").onchange=()=>{if(center){setCenter(center.y,center.x,center.label);run()}};
+$("radius").onchange=async()=>{if(center){await setCenter(center.y,center.x,center.label);run()}};
 $("bossam").onchange=()=>{if(center) run()};
 
-// ---------- 검색 ----------
-// 1) 기준점 반경 검색  2) 결과가 꽉 차면(45개) 구역을 나눠 다시 검색  3) "지역명 + 족발" 문장 검색으로 보충
+// ---------- 공식 통계 ----------
+function renderOfficial(){
+  const body=$("offBody");
+  if(!region){$("offTitle").textContent="동네 공식 통계";return}
+  $("offTitle").textContent=region.key+" 족발·보쌈 공식 통계";
+  const sbiz=`<a class="btn" href="https://bigdata.sbiz.or.kr/#/hotplace/gisDetail" target="_blank" rel="noopener">소상공인365에서 직접 보기</a>`;
+  if(!statsLoaded){body.innerHTML=`<p class="note">통계 불러오는 중…</p>`;return}
+  const s=stats[region.key];
+  if(!s){
+    const title="데이터요청: "+region.key;
+    const bodyTxt="key: "+region.key+"\nquery: "+region.query+"\n\n이 지역의 족발/보쌈 공식 통계를 추가해 주세요.";
+    const url="https://github.com/"+REPO+"/issues/new?title="+encodeURIComponent(title)+"&body="+encodeURIComponent(bodyTxt);
+    body.innerHTML=`<div class="empty">
+      <p><b>${esc(region.key)}</b>은(는) 아직 통계가 들어오지 않은 동네예요.</p>
+      <p class="note"><b>데이터 요청</b>을 누르면 GitHub 요청 창이 열립니다. 창 아래 초록색 <b>Create</b> 버튼을 누르면, 다음 날 아침 이 동네 소상공인365 공식 통계가 자동으로 채워집니다.</p>
+      <div class="btns"><a class="btn primary" href="${url}" target="_blank" rel="noopener">데이터 요청</a>${sbiz}</div></div>`;
+    return;
+  }
+  const market=s.avg*s.stores;
+  const cmp=s.sigungu&&s.sigungu.avg?Math.round((s.avg/s.sigungu.avg-1)*100):null;
+  const ym=s.asof.replace(/^(\d{4})-(\d{2})$/,"$1년 $2월");
+  body.innerHTML=`<div class="figs">
+      <div class="fig"><div class="k">업소당 월평균 매출</div><div class="v">${won(s.avg)}</div>
+        <div class="d">${cmp!==null?esc(s.sigungu.name)+" 평균 "+s.sigungu.avg.toLocaleString()+"만원 대비 "+(cmp>=0?"+":"")+cmp+"%":""}</div></div>
+      <div class="fig"><div class="k">족발·보쌈 업소 수</div><div class="v">${s.stores}<small>곳</small></div>
+        <div class="d">${s.sigungu&&s.sigungu.stores?esc(s.sigungu.name)+" 전체 "+s.sigungu.stores+"곳":""}</div></div>
+      <div class="fig"><div class="k">동네 족발 시장 규모 (월)</div><div class="v">${won(market)}</div><div class="d">업소당 평균 × 업소 수</div></div>
+      <div class="fig"><div class="k">기준월</div><div class="v" style="font-size:22px">${ym}</div><div class="d">매달 1일 자동 갱신</div></div>
+    </div>
+    <p class="src"><span>출처: 소상공인365 상세분석 · 음식 &gt; 한식 &gt; 족발/보쌈 · ${esc(s.query||region.query)}</span>${sbiz}</p>`;
+}
+
+// ---------- 경쟁점 검색 ----------
 function cells(c,R){
   const step=R<=3000?1200:R<=5000?1800:2800, n=Math.ceil(R/step);
   const dy=step/111000, dx=step/(111000*Math.cos(c.y*Math.PI/180)), out=[];
@@ -236,7 +257,6 @@ function searchCell(kw,cell){
     },opt);
   });
 }
-const shortArea=label=>{const t=(label||"").split(/\s+/).filter(w=>/(동|읍|면|가|리|구)$/.test(w));return t.length?t.slice(-2).join(" "):""};
 async function run(){
   busy=true;$("go").disabled=true;
   const R=+$("radius").value, kws=["족발","족발집"].concat($("bossam").checked?["보쌈"]:[]);
@@ -244,35 +264,39 @@ async function run(){
   for(const kw of kws){
     const r=await searchCell(kw,{y:center.y,x:center.x,r:R});
     r.forEach(p=>found.set(p.id,p)); if(r.length>=45) full=true;
-    msg("찾는 중… "+found.size+"곳");
+    msg("경쟁점 찾는 중… "+found.size+"곳");
   }
   if(full){
     const cs=cells(center,R); let done=0;
     for(const cell of cs) for(const kw of kws.filter(k=>k!=="족발집")){
       (await searchCell(kw,cell)).forEach(p=>found.set(p.id,p));
-      done++; msg("업체가 많아 구역을 나눠 찾는 중… "+done+"/"+(cs.length*2)+" · "+found.size+"곳");
+      done++; msg("경쟁점이 많아 구역을 나눠 찾는 중… "+done+"/"+(cs.length*(kws.length-1))+" · "+found.size+"곳");
     }
   }
-  const area=shortArea(center.label);
-  if(area) for(const kw of ["족발"].concat($("bossam").checked?["보쌈"]:[])){
-    (await searchCell(area+" "+kw,null)).forEach(p=>found.set(p.id,p));
+  if(region&&region.dong) for(const kw of ["족발"].concat($("bossam").checked?["보쌈"]:[])){
+    (await searchCell(region.key+" "+kw,null)).forEach(p=>found.set(p.id,p));
   }
   rows=[...found.values()].filter(p=>p.category_group_code==="FD6"&&/족발|보쌈/.test(p.category_name+p.place_name))
     .map(p=>({id:p.id,n:p.place_name,cat:p.category_name.split(">").pop().trim(),a:p.road_address_name||p.address_name,t:p.phone,url:p.place_url,y:+p.y,x:+p.x,d:dist(center.y,center.x,+p.y,+p.x)}))
     .filter(p=>p.d<=R);
-  selected=null; syncBase(); render();
-  msg(center.label+" 기준 "+fmtD(R)+" 안에서 "+rows.length+"곳을 찾았어요.");
-  $("listTitle").textContent=center.label+" 주변";
+  selected=null; render();
+  msg((region?region.key:center.label)+" 기준 "+fmtD(R)+" 안에서 경쟁점 "+rows.length+"곳을 찾았어요.");
+  $("listTitle").textContent="주변 경쟁점 "+rows.length+"곳";
+  $("listSub").textContent="반경 "+fmtD(R)+" · 카카오맵 등록 기준";
   const b=new kakao.maps.LatLngBounds();b.extend(new kakao.maps.LatLng(center.y,center.x));rows.forEach(p=>b.extend(new kakao.maps.LatLng(p.y,p.x)));
   if(rows.length) map.setBounds(b); else map.setCenter(new kakao.maps.LatLng(center.y,center.x));
   busy=false;$("go").disabled=false;
 }
 
-// ---------- 표시 ----------
+// ---------- 목록 ----------
 function render(){
-  const base=baseFor(areaKey());
-  rows.forEach(p=>{const v=sales[p.id];p.lv=levels[p.id]||"mid";p.man=(v===undefined||v==="")?null:+v;
-    p.est=(base!=null&&base!=="")?Math.round(base*MULT[p.lv]/10)*10:null;p.sales=p.man??p.est;p.isEst=p.man===null&&p.est!==null});
+  const s=region&&stats[region.key];
+  rows.forEach(p=>{const v=real[p.id];p.real=(v===undefined||v==="")?null:+v;p.rv=reviews[p.id]??null});
+  const rvd=rows.filter(p=>p.rv>0), mean=rvd.length>=2?rvd.reduce((a,p)=>a+p.rv,0)/rvd.length:null;
+  rows.forEach(p=>{
+    p.est=(s&&mean&&p.rv>0)?Math.round(s.avg*Math.min(3,Math.max(0.3,p.rv/mean))/10)*10:null;
+    p.sales=p.real??p.est;
+  });
   rows.sort((a,b)=>{
     if(sortKey==="name") return sortAsc?a.n.localeCompare(b.n):b.n.localeCompare(a.n);
     let A=a[sortKey],B=b[sortKey]; if(sortKey==="sales"){A=A??-1;B=B??-1}
@@ -289,42 +313,44 @@ function render(){
       <td class="num">${fmtD(p.d)}</td>
       <td><span class="nm">${esc(p.n)}</span><span class="tag">${esc(p.cat)}</span>
         <div class="ad">${esc(p.a)}${p.t?` · <span class="num">${esc(p.t)}</span>`:""} · <a href="${esc(p.url)}" target="_blank" rel="noopener">카카오맵</a></div></td>
-      <td><input class="sales${p.isEst?" is-est":""}" id="s-${p.id}" type="number" min="0" step="10" inputmode="numeric" placeholder="${p.est??"입력"}" value="${p.man??""}" aria-label="${esc(p.n)} 월매출">
-        ${p.isEst?`<span class="est">추정 ${p.est.toLocaleString()}</span>`:p.man!==null?`<span class="est" style="color:var(--jade)">직접 입력</span>`:""}
-        <span class="lv" data-id="${p.id}">${["hi","mid","lo"].map(k=>`<button type="button" data-lv="${k}" aria-pressed="${p.lv===k}">${LVN[k]}</button>`).join("")}</span></td>
-    </tr>`).join(""):`<tr><td colspan="3" class="ad" style="padding:16px">찾은 업체가 없습니다. 반경을 넓혀 보세요.</td></tr>`;
-  $("sN").innerHTML=rows.length+"<small>곳</small>";
-  $("s1").innerHTML=rows.filter(p=>p.d<=1000).length+"<small>곳</small>";
-  const v=rows.filter(p=>p.sales!==null).map(p=>p.sales);
-  $("sAvg").innerHTML=(v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length).toLocaleString():"-")+"<small>만원</small>";
-  $("sSum").innerHTML=(v.length?v.reduce((a,b)=>a+b,0).toLocaleString():"-")+"<small>만원</small>";
+      <td>
+        <input class="in real" id="m-${p.id}" type="number" min="0" step="10" inputmode="numeric" placeholder="확인 매출" value="${p.real??""}" aria-label="${esc(p.n)} 확인된 월매출">
+        ${p.real!==null?`<span class="real">확인 매출</span>`:""}
+        <input class="in rv" id="r-${p.id}" type="number" min="0" inputmode="numeric" placeholder="배달 리뷰 수" value="${p.rv??""}" aria-label="${esc(p.n)} 배달앱 리뷰 수">
+        ${p.est!==null&&p.real===null?`<span class="est">참고 추정 ${p.est.toLocaleString()}</span>`:""}
+      </td>
+    </tr>`).join(""):`<tr><td colspan="3" class="ad" style="padding:16px">찾은 경쟁점이 없습니다. 반경을 넓혀 보세요.</td></tr>`;
 }
 function select(id,fromMap){
   selected=id; render();
   const p=rows.find(r=>r.id===id); if(!p) return;
   const ll=new kakao.maps.LatLng(p.y,p.x);
-  info.setContent(`<div class="iw"><b>${esc(p.n)}</b><br>${esc(p.a)}${p.t?"<br>"+esc(p.t):""}<br>거리 ${fmtD(p.d)} · 월매출 ${p.sales!==null?p.sales.toLocaleString()+"만원"+(p.isEst?" (추정)":""):"미입력"}</div>`);
+  const sales=p.real!==null?p.real.toLocaleString()+"만원 (확인)":p.est!==null?p.est.toLocaleString()+"만원 (참고 추정)":"정보 없음";
+  info.setContent(`<div class="iw"><b>${esc(p.n)}</b><br>${esc(p.a)}${p.t?"<br>"+esc(p.t):""}<br>거리 ${fmtD(p.d)} · 매출 ${sales}</div>`);
   info.setPosition(ll); info.open(map);
   if(!fromMap) map.panTo(ll);
   document.querySelector(`tr[data-id="${id}"]`)?.scrollIntoView({block:"nearest"});
 }
-$("tb").addEventListener("click",e=>{
-  const b=e.target.closest(".lv button");
-  if(b){const id=b.parentElement.dataset.id;if(b.dataset.lv==="mid")delete levels[id];else levels[id]=b.dataset.lv;st.set("jk_lvl",levels);render();return}
-  const n=e.target.closest(".nm");if(n) select(n.closest("tr").dataset.id,false)});
+$("tb").addEventListener("click",e=>{const n=e.target.closest(".nm");if(n) select(n.closest("tr").dataset.id,false)});
 $("tb").addEventListener("change",e=>{
-  if(!e.target.classList.contains("sales")) return;
-  const id=e.target.id.slice(2);
-  if(e.target.value==="") delete sales[id]; else sales[id]=+e.target.value;
-  st.set("jk_sales",sales); render(); $("toast").textContent="저장했어요.";
+  const t=e.target, id=t.id.slice(2), v=t.value;
+  if(t.classList.contains("rv")){if(v==="")delete reviews[id];else reviews[id]=+v;st.set("jk_rv",reviews);$("toast").textContent="리뷰 수를 반영했어요."}
+  else if(t.classList.contains("real")){if(v==="")delete real[id];else real[id]=+v;st.set("jk_sales",real);$("toast").textContent="확인 매출을 저장했어요."}
+  else return;
+  render();
 });
 document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortAsc=sortKey===k?!sortAsc:true;sortKey=k;render()});
-const table=()=>[["거리(m)","상호","업종","주소","전화","월매출(만원)","구분","카카오맵"]].concat(rows.map(p=>[Math.round(p.d),p.n,p.cat,p.a,p.t,p.sales??"",p.isEst?"추정("+LVN[p.lv]+")":p.man!==null?"직접입력":"",p.url]));
+const table=()=>{
+  const s=region&&stats[region.key];
+  const head=[["지역",region?region.key:"","공식 업소당 월평균(만원)",s?s.avg:"","공식 업소 수",s?s.stores:"","기준월",s?s.asof:""],[],
+    ["거리(m)","상호","업종","주소","전화","확인 매출(만원)","참고 추정(만원)","배달 리뷰 수","카카오맵"]];
+  return head.concat(rows.map(p=>[Math.round(p.d),p.n,p.cat,p.a,p.t,p.real??"",p.est??"",p.rv??"",p.url]));
+};
 $("copy").onclick=async()=>{try{await navigator.clipboard.writeText(table().map(r=>r.join("\t")).join("\n"));$("toast").textContent="복사했어요. 엑셀에 붙여넣으세요."}catch(e){$("toast").textContent="복사가 막혔어요. CSV 저장을 써주세요."}};
 $("csv").onclick=()=>{
   const csv="﻿"+table().map(r=>r.map(c=>'"'+String(c??"").replace(/"/g,'""')+'"').join(",")).join("\n");
   const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
-  a.download=(center?center.label.replace(/\s+/g,"_"):"족발")+"_족발집.csv";a.click();
+  a.download=(region?region.key.replace(/\s+/g,"_"):"족발")+"_상권.csv";a.click();
 };
 start();
 </script>
