@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>족발 상권지도</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --bg:#f7f5f1; --panel:#ffffff; --fg:#231c16; --muted:#7a6e63; --line:#e6dfd6;
+  --soy:#6b3f1f; --soy-soft:#f1e6dc; --jade:#2f6f5e; --gold:#b5832a; --grid:#ece5dc;
+  --display:"Do Hyeon","IBM Plex Sans KR",system-ui,sans-serif;
+  --body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#17130f; --panel:#201a15; --fg:#efe7de; --muted:#a89a8c; --line:#352c24;
+  --soy:#e0a274; --soy-soft:#3a2a1d; --jade:#6cc2a8; --gold:#e0b45a; --grid:#2a221c; color-scheme:dark}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:1280px;margin:0 auto;display:grid;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+h1{font-family:var(--display);font-weight:400;font-size:32px;line-height:1.1;margin:0;color:var(--soy)}
+.sub{color:var(--muted);font-size:13px;margin:4px 0 0}
+.search{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px}
+.search input[type=text]{flex:1 1 220px;min-width:0;font:inherit;font-size:15px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+select,.sm{font:inherit;font-size:13px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
+.go{font:inherit;font-size:14px;font-weight:600;border:0;border-radius:8px;padding:9px 18px;background:var(--soy);color:var(--bg);cursor:pointer}
+.go:disabled{opacity:.5;cursor:wait}
+label.ck{display:flex;gap:5px;align-items:center;font-size:13px;color:var(--muted);cursor:pointer}
+#msg{width:100%;font-size:12.5px;color:var(--muted);margin:0}
+#msg.err{color:#c0392b}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.stat .k{font-size:12px;color:var(--muted)}
+.stat .v{font-family:var(--display);font-size:28px;line-height:1.2;font-variant-numeric:tabular-nums}
+.stat .v small{font-family:var(--body);font-size:13px;color:var(--muted);margin-left:2px}
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;min-width:0;overflow:hidden}
+#map{height:560px;background:var(--grid)}
+.hint{font-size:12px;color:var(--muted);padding:8px 14px}
+.ph{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.ph h2{font-size:15px;margin:0;font-weight:600}
+.tablebox{overflow:auto;max-height:560px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{position:sticky;top:0;background:var(--panel);text-align:left;font-weight:500;font-size:12px;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);cursor:pointer;white-space:nowrap;z-index:1}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+tr.sel td{background:var(--soy-soft)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.nm{font-weight:600;cursor:pointer}
+.nm:hover{color:var(--soy)}
+.ad{font-size:12px;color:var(--muted)}
+.ad a{color:var(--jade);text-decoration:none}
+.tag{display:inline-block;font-size:11px;padding:0 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);margin-left:6px;vertical-align:1px}
+.sales{width:92px;font:inherit;font-family:var(--mono);font-size:13px;text-align:right;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--fg)}
+.foot{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;padding:10px 14px;font-size:12px;color:var(--muted)}
+.btn{font:inherit;font-size:12.5px;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:6px;padding:6px 10px;cursor:pointer}
+.note{font-size:12.5px;color:var(--muted);line-height:1.65;max-width:75ch;margin:0}
+.pin{width:14px;height:14px;border-radius:50%;background:var(--soy);border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.45);cursor:pointer}
+.pin.sel{width:20px;height:20px;background:var(--gold)}
+.iw{padding:8px 10px;font-size:12px;line-height:1.5;min-width:170px;color:#222}
+#keybox{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#keybox[hidden]{display:none}
+:focus-visible{outline:2px solid var(--jade);outline-offset:2px}
+@media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}#map{height:380px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.tablebox{max-height:none}}
+@media (max-width:520px){h1{font-size:26px}.hide-s{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>족발 상권지도</h1>
+      <p class="sub">전국 어디든 동네 이름을 넣으면 주변 족발·보쌈집과 거리를 보여줍니다</p>
+    </div>
+  </header>
+
+  <div id="keybox" hidden>
+    <span class="ad" style="flex-basis:100%">카카오 JavaScript 키를 한 번만 넣어주세요. 이 기기에 저장됩니다.</span>
+    <input id="keyIn" class="sm" type="password" style="flex:1 1 240px" placeholder="JavaScript 키">
+    <button class="go" id="keyGo">지도 열기</button>
+  </div>
+
+  <form class="search" id="form">
+    <input type="text" id="q" value="원주시 문막읍" placeholder="예: 서울 문래동, 부산 서면, 원주시 문막읍" aria-label="지역">
+    <select id="radius" aria-label="반경">
+      <option value="1000">1km</option><option value="2000">2km</option>
+      <option value="3000" selected>3km</option><option value="5000">5km</option><option value="10000">10km</option>
+    </select>
+    <label class="ck"><input type="checkbox" id="bossam" checked> 보쌈 포함</label>
+    <button class="go" id="go" type="submit">찾기</button>
+    <p id="msg">지역을 넣고 찾기를 누르세요. 지도를 누르면 그 지점 기준으로 다시 찾습니다.</p>
+  </form>
+
+  <section class="stats">
+    <div class="stat"><div class="k">반경 안 업체</div><div class="v" id="sN">0<small>곳</small></div></div>
+    <div class="stat"><div class="k">1km 안 업체</div><div class="v" id="s1">0<small>곳</small></div></div>
+    <div class="stat"><div class="k">입력한 평균 월매출</div><div class="v" id="sAvg">-<small>만원</small></div></div>
+    <div class="stat"><div class="k">입력한 합계 월매출</div><div class="v" id="sSum">-<small>만원</small></div></div>
+  </section>
+
+  <div class="main">
+    <section class="panel">
+      <div id="map"></div>
+      <p class="hint">빈 곳을 누르면 그 지점이 기준점이 됩니다. 창업 예정지를 찍어 보세요.</p>
+    </section>
+    <section class="panel">
+      <div class="ph"><h2 id="listTitle">업체 목록</h2></div>
+      <div class="tablebox">
+        <table>
+          <thead><tr><th data-k="dist">거리</th><th data-k="name">상호 / 주소</th><th data-k="sales">월매출(만원)</th></tr></thead>
+          <tbody id="tb"><tr><td colspan="3" class="ad" style="padding:16px">검색하면 여기에 표시됩니다.</td></tr></tbody>
+        </table>
+      </div>
+      <div class="foot">
+        <span id="toast">매출은 이 기기 브라우저에 저장됩니다.</span>
+        <span style="display:flex;gap:6px"><button class="btn" id="copy">목록 복사(엑셀용)</button><button class="btn" id="csv">CSV 저장</button></span>
+      </div>
+    </section>
+  </div>
+
+  <p class="note">월매출은 직접 입력하는 칸입니다. 가게별 실제 매출은 공개되지 않으니, 소상공인상권정보(sg.sbiz.or.kr) 상권분석의 '족발/보쌈' 평균 매출을 기준으로 넣어보세요. 목록은 카카오맵에 등록된 가게 기준이라 배달만 하는 가게는 빠질 수 있습니다.</p>
+</div>
+
+<script>
+const KAKAO_KEY = "b8438f5ef4ac393f8515e92a00bc8b7e";   // 카카오 JavaScript 키 (상권분석 앱)
+
+const $=id=>document.getElementById(id);
+const st={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let sales=st.get("jk_sales",{});
+let map,ps,geo,info,centerMk,circle,overlays=[],rows=[],center=null,selected=null,sortKey="dist",sortAsc=true,busy=false;
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtD=m=>m<1000?Math.round(m)+"m":(m/1000).toFixed(1)+"km";
+function dist(a,b,c,d){const R=6371000,t=Math.PI/180;const h=Math.sin((c-a)*t/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin((d-b)*t/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+function msg(t,err){$("msg").textContent=t;$("msg").className=err?"err":""}
+
+// ---------- 카카오 SDK ----------
+function start(){
+  const key=KAKAO_KEY||st.get("jk_key","");
+  if(!key){$("keybox").hidden=false;return}
+  const s=document.createElement("script");
+  s.src="https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&libraries=services&appkey="+encodeURIComponent(key);
+  s.onload=()=>kakao.maps.load(init);
+  s.onerror=()=>{msg("카카오지도를 불러오지 못했어요. 카카오 개발자 사이트의 플랫폼 → Web 사이트 도메인에 "+location.origin+" 이 등록됐는지, 키가 JavaScript 키인지 확인해 주세요.",true);if(!KAKAO_KEY)$("keybox").hidden=false};
+  document.head.appendChild(s);
+}
+$("keyGo").onclick=()=>{const k=$("keyIn").value.trim();if(!k)return;st.set("jk_key",k);$("keybox").hidden=true;start()};
+
+function init(){
+  map=new kakao.maps.Map($("map"),{center:new kakao.maps.LatLng(37.3205,127.827),level:6});
+  map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
+  map.addControl(new kakao.maps.MapTypeControl(),kakao.maps.ControlPosition.TOPRIGHT);
+  ps=new kakao.maps.services.Places();geo=new kakao.maps.services.Geocoder();
+  info=new kakao.maps.InfoWindow({removable:true});
+  kakao.maps.event.addListener(map,"click",e=>{if(busy)return;setCenter(e.latLng.getLat(),e.latLng.getLng(),"찍은 위치");run()});
+  const last=st.get("jk_q",null); if(last) $("q").value=last;
+  $("form").requestSubmit();
+}
+
+// ---------- 지역 → 좌표 ----------
+function locate(q){
+  return new Promise(res=>{
+    geo.addressSearch(q,(r,s)=>{
+      if(s===kakao.maps.services.Status.OK) return res({y:+r[0].y,x:+r[0].x,label:r[0].address_name});
+      ps.keywordSearch(q,(r2,s2)=>{
+        if(s2===kakao.maps.services.Status.OK) return res({y:+r2[0].y,x:+r2[0].x,label:r2[0].place_name});
+        res(null);
+      });
+    });
+  });
+}
+function setCenter(y,x,label){
+  center={y,x,label};
+  const ll=new kakao.maps.LatLng(y,x);
+  if(centerMk) centerMk.setMap(null); if(circle) circle.setMap(null);
+  centerMk=new kakao.maps.Marker({position:ll,map});
+  circle=new kakao.maps.Circle({center:ll,radius:+$("radius").value,strokeWeight:1,strokeColor:"#6b3f1f",strokeStyle:"dash",fillColor:"#6b3f1f",fillOpacity:.06,map});
+}
+
+$("form").addEventListener("submit",async e=>{
+  e.preventDefault(); if(!map||busy) return;
+  const q=$("q").value.trim(); if(!q) return;
+  msg("위치 찾는 중…");
+  const c=await locate(q);
+  if(!c) return msg('"'+q+'" 위치를 찾지 못했어요. "서울 문래동"처럼 시·구·동을 함께 적어보세요.',true);
+  st.set("jk_q",q);
+  setCenter(c.y,c.x,c.label);
+  run();
+});
+$("radius").onchange=()=>{if(center){setCenter(center.y,center.x,center.label);run()}};
+$("bossam").onchange=()=>{if(center) run()};
+
+// ---------- 검색 (반경이 넓으면 구역을 나눠 검색) ----------
+function cells(c,R){
+  if(R<=2000) return [{y:c.y,x:c.x,r:R}];
+  const step=R<=3000?1500:R<=5000?2000:3000, n=Math.ceil(R/step);
+  const dy=step/111000, dx=step/(111000*Math.cos(c.y*Math.PI/180)), out=[];
+  for(let i=-n;i<=n;i++)for(let j=-n;j<=n;j++){const y=c.y+i*dy,x=c.x+j*dx;if(dist(c.y,c.x,y,x)<=R+step*0.7) out.push({y,x,r:Math.round(step*0.75)})}
+  return out;
+}
+function searchCell(kw,cell){
+  return new Promise(res=>{
+    const acc=[];
+    ps.keywordSearch(kw,(d,s,pg)=>{
+      if(s===kakao.maps.services.Status.OK){acc.push(...d);if(pg.hasNextPage) return pg.nextPage()}
+      res(acc);
+    },{location:new kakao.maps.LatLng(cell.y,cell.x),radius:cell.r,sort:kakao.maps.services.SortBy.DISTANCE});
+  });
+}
+async function run(){
+  busy=true;$("go").disabled=true;
+  const R=+$("radius").value, kws=["족발"].concat($("bossam").checked?["보쌈"]:[]);
+  const cs=cells(center,R), found=new Map(); let done=0;
+  for(const cell of cs) for(const kw of kws){
+    (await searchCell(kw,cell)).forEach(p=>found.set(p.id,p));
+    done++; msg("찾는 중… "+done+"/"+(cs.length*kws.length)+" · "+found.size+"곳");
+  }
+  rows=[...found.values()].filter(p=>p.category_group_code==="FD6"&&/족발|보쌈/.test(p.category_name+p.place_name))
+    .map(p=>({id:p.id,n:p.place_name,cat:p.category_name.split(">").pop().trim(),a:p.road_address_name||p.address_name,t:p.phone,url:p.place_url,y:+p.y,x:+p.x,d:dist(center.y,center.x,+p.y,+p.x)}))
+    .filter(p=>p.d<=R);
+  selected=null; render();
+  msg(center.label+" 기준 "+fmtD(R)+" 안에서 "+rows.length+"곳을 찾았어요.");
+  $("listTitle").textContent=center.label+" 주변";
+  const b=new kakao.maps.LatLngBounds();b.extend(new kakao.maps.LatLng(center.y,center.x));rows.forEach(p=>b.extend(new kakao.maps.LatLng(p.y,p.x)));
+  if(rows.length) map.setBounds(b); else map.setCenter(new kakao.maps.LatLng(center.y,center.x));
+  busy=false;$("go").disabled=false;
+}
+
+// ---------- 표시 ----------
+function render(){
+  rows.forEach(p=>{const v=sales[p.id];p.sales=(v===undefined||v==="")?null:+v});
+  rows.sort((a,b)=>{
+    if(sortKey==="name") return sortAsc?a.n.localeCompare(b.n):b.n.localeCompare(a.n);
+    let A=a[sortKey],B=b[sortKey]; if(sortKey==="sales"){A=A??-1;B=B??-1}
+    return sortAsc?A-B:B-A;
+  });
+  overlays.forEach(o=>o.setMap(null)); overlays=[];
+  rows.forEach(p=>{
+    const el=document.createElement("div");el.className="pin"+(p.id===selected?" sel":"");el.title=p.n;
+    el.onclick=ev=>{ev.stopPropagation();select(p.id,true)};
+    overlays.push(new kakao.maps.CustomOverlay({position:new kakao.maps.LatLng(p.y,p.x),content:el,yAnchor:.5,map,zIndex:p.id===selected?3:1}));
+  });
+  $("tb").innerHTML=rows.length?rows.map(p=>`
+    <tr data-id="${p.id}" class="${p.id===selected?"sel":""}">
+      <td class="num">${fmtD(p.d)}</td>
+      <td><span class="nm">${esc(p.n)}</span><span class="tag">${esc(p.cat)}</span>
+        <div class="ad">${esc(p.a)}${p.t?` · <span class="num">${esc(p.t)}</span>`:""} · <a href="${esc(p.url)}" target="_blank" rel="noopener">카카오맵</a></div></td>
+      <td><input class="sales" id="s-${p.id}" type="number" min="0" step="10" inputmode="numeric" placeholder="입력" value="${p.sales??""}" aria-label="${esc(p.n)} 월매출"></td>
+    </tr>`).join(""):`<tr><td colspan="3" class="ad" style="padding:16px">찾은 업체가 없습니다. 반경을 넓혀 보세요.</td></tr>`;
+  $("sN").innerHTML=rows.length+"<small>곳</small>";
+  $("s1").innerHTML=rows.filter(p=>p.d<=1000).length+"<small>곳</small>";
+  const v=rows.filter(p=>p.sales!==null).map(p=>p.sales);
+  $("sAvg").innerHTML=(v.length?Math.round(v.reduce((a,b)=>a+b,0)/v.length).toLocaleString():"-")+"<small>만원</small>";
+  $("sSum").innerHTML=(v.length?v.reduce((a,b)=>a+b,0).toLocaleString():"-")+"<small>만원</small>";
+}
+function select(id,fromMap){
+  selected=id; render();
+  const p=rows.find(r=>r.id===id); if(!p) return;
+  const ll=new kakao.maps.LatLng(p.y,p.x);
+  info.setContent(`<div class="iw"><b>${esc(p.n)}</b><br>${esc(p.a)}${p.t?"<br>"+esc(p.t):""}<br>거리 ${fmtD(p.d)} · 월매출 ${p.sales!==null?p.sales.toLocaleString()+"만원":"미입력"}</div>`);
+  info.setPosition(ll); info.open(map);
+  if(!fromMap) map.panTo(ll);
+  document.querySelector(`tr[data-id="${id}"]`)?.scrollIntoView({block:"nearest"});
+}
+$("tb").addEventListener("click",e=>{const n=e.target.closest(".nm");if(n) select(n.closest("tr").dataset.id,false)});
+$("tb").addEventListener("change",e=>{
+  if(!e.target.classList.contains("sales")) return;
+  const id=e.target.id.slice(2);
+  if(e.target.value==="") delete sales[id]; else sales[id]=+e.target.value;
+  st.set("jk_sales",sales); render(); $("toast").textContent="저장했어요.";
+});
+document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;sortAsc=sortKey===k?!sortAsc:true;sortKey=k;render()});
+const table=()=>[["거리(m)","상호","업종","주소","전화","월매출(만원)","카카오맵"]].concat(rows.map(p=>[Math.round(p.d),p.n,p.cat,p.a,p.t,p.sales??"",p.url]));
+$("copy").onclick=async()=>{try{await navigator.clipboard.writeText(table().map(r=>r.join("\t")).join("\n"));$("toast").textContent="복사했어요. 엑셀에 붙여넣으세요."}catch(e){$("toast").textContent="복사가 막혔어요. CSV 저장을 써주세요."}};
+$("csv").onclick=()=>{
+  const csv="﻿"+table().map(r=>r.map(c=>'"'+String(c??"").replace(/"/g,'""')+'"').join(",")).join("\n");
+  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download=(center?center.label.replace(/\s+/g,"_"):"족발")+"_족발집.csv";a.click();
+};
+start();
+</script>
+</body>
+</html>
