@@ -106,7 +106,8 @@ tr.sel td{background:var(--soy-soft)}
   <section class="base" aria-label="추정 매출 기준">
     <label for="base"><b id="baseLabel">이 지역</b> 족발·보쌈 평균 월매출</label>
     <span><input id="base" type="number" min="0" step="100" inputmode="numeric" placeholder="예: 2500"> 만원</span>
-    <span class="ad">한 번 넣으면 모든 가게에 추정 매출이 자동으로 채워집니다. 값은 <a href="https://sg.sbiz.or.kr" target="_blank" rel="noopener">소상공인상권정보</a> → 상권분석에서 이 동네 '족발/보쌈' 평균 매출을 보고 넣으세요. 가게마다 많음/보통/적음을 누르면 ×1.5 / ×1 / ×0.6으로 조정되고, 실제 매출을 알면 칸에 직접 덮어쓰면 됩니다.</span>
+    <span class="ad" id="autoNote" hidden></span>
+    <span class="ad">한 번 넣으면 모든 가게에 추정 매출이 자동으로 채워집니다. 값은 <a href="https://bigdata.sbiz.or.kr" target="_blank" rel="noopener">소상공인365</a> → 상권분석에서 이 동네 '족발/보쌈' 평균 매출을 보고 넣으세요. 가게마다 많음/보통/적음을 누르면 ×1.5 / ×1 / ×0.6으로 조정되고, 실제 매출을 알면 칸에 직접 덮어쓰면 됩니다.</span>
   </section>
 
   <section class="stats">
@@ -145,10 +146,15 @@ const KAKAO_KEY = "b8438f5ef4ac393f8515e92a00bc8b7e";   // 카카오 JavaScript 
 const $=id=>document.getElementById(id);
 const st={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let sales=st.get("jk_sales",{});
-let bases=st.get("jk_base",{}), levels=st.get("jk_lvl",{});
+let bases=st.get("jk_base",{}), levels=st.get("jk_lvl",{}), auto={};
+fetch("bases.json?"+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.areas){auto=j.areas;if(center){syncBase();render()}}}).catch(()=>{});
+const baseFor=k=>bases[k]!=null?bases[k]:(auto[k]?auto[k].avg:null);
 const MULT={hi:1.5,mid:1,lo:0.6}, LVN={hi:"많음",mid:"보통",lo:"적음"};
 const areaKey=()=>center?(shortArea(center.label)||center.label):"";
-function syncBase(){const k=areaKey();$("baseLabel").textContent=k||"이 지역";$("base").value=bases[k]??""}
+function syncBase(){const k=areaKey();$("baseLabel").textContent=k||"이 지역";$("base").value=bases[k]??"";
+  const a=auto[k], n=$("autoNote");
+  if(a){n.hidden=false;n.textContent=(bases[k]!=null?"직접 넣은 값을 쓰는 중 · 칸을 비우면 ":"")+"소상공인365 자동값 "+a.avg.toLocaleString()+"만원 ("+a.asof.replace("-","년 ")+"월 기준"+(a.scope?", "+a.scope:"")+")";$("base").placeholder=a.avg}
+  else{n.hidden=true;$("base").placeholder="예: 2500"}}
 $("base").addEventListener("change",()=>{const k=areaKey();if(!k)return;const v=$("base").value;if(v==="")delete bases[k];else bases[k]=+v;st.set("jk_base",bases);render();$("toast").textContent=v===""?"평균 매출을 지웠어요.":"추정 매출을 채웠어요."});
 let map,ps,geo,info,centerMk,circle,overlays=[],rows=[],center=null,selected=null,sortKey="d",sortAsc=true,busy=false;
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -264,7 +270,7 @@ async function run(){
 
 // ---------- 표시 ----------
 function render(){
-  const base=bases[areaKey()];
+  const base=baseFor(areaKey());
   rows.forEach(p=>{const v=sales[p.id];p.lv=levels[p.id]||"mid";p.man=(v===undefined||v==="")?null:+v;
     p.est=(base!=null&&base!=="")?Math.round(base*MULT[p.lv]/10)*10:null;p.sales=p.man??p.est;p.isEst=p.man===null&&p.est!==null});
   rows.sort((a,b)=>{
