@@ -110,7 +110,7 @@ tr.sel td{background:var(--soy-soft)}
       <div class="ph"><h2 id="listTitle">업체 목록</h2></div>
       <div class="tablebox">
         <table>
-          <thead><tr><th data-k="dist">거리</th><th data-k="name">상호 / 주소</th><th data-k="sales">월매출(만원)</th></tr></thead>
+          <thead><tr><th data-k="d">거리</th><th data-k="name">상호 / 주소</th><th data-k="sales">월매출(만원)</th></tr></thead>
           <tbody id="tb"><tr><td colspan="3" class="ad" style="padding:16px">검색하면 여기에 표시됩니다.</td></tr></tbody>
         </table>
       </div>
@@ -130,7 +130,7 @@ const KAKAO_KEY = "b8438f5ef4ac393f8515e92a00bc8b7e";   // 카카오 JavaScript 
 const $=id=>document.getElementById(id);
 const st={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let sales=st.get("jk_sales",{});
-let map,ps,geo,info,centerMk,circle,overlays=[],rows=[],center=null,selected=null,sortKey="dist",sortAsc=true,busy=false;
+let map,ps,geo,info,centerMk,circle,overlays=[],rows=[],center=null,selected=null,sortKey="d",sortAsc=true,busy=false;
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const fmtD=m=>m<1000?Math.round(m)+"m":(m/1000).toFixed(1)+"km";
 function dist(a,b,c,d){const R=6371000,t=Math.PI/180;const h=Math.sin((c-a)*t/2)**2+Math.cos(a*t)*Math.cos(c*t)*Math.sin((d-b)*t/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
@@ -192,10 +192,10 @@ $("form").addEventListener("submit",async e=>{
 $("radius").onchange=()=>{if(center){setCenter(center.y,center.x,center.label);run()}};
 $("bossam").onchange=()=>{if(center) run()};
 
-// ---------- 검색 (반경이 넓으면 구역을 나눠 검색) ----------
+// ---------- 검색 ----------
+// 1) 기준점 반경 검색  2) 결과가 꽉 차면(45개) 구역을 나눠 다시 검색  3) "지역명 + 족발" 문장 검색으로 보충
 function cells(c,R){
-  if(R<=2000) return [{y:c.y,x:c.x,r:R}];
-  const step=R<=3000?1500:R<=5000?2000:3000, n=Math.ceil(R/step);
+  const step=R<=3000?1200:R<=5000?1800:2800, n=Math.ceil(R/step);
   const dy=step/111000, dx=step/(111000*Math.cos(c.y*Math.PI/180)), out=[];
   for(let i=-n;i<=n;i++)for(let j=-n;j<=n;j++){const y=c.y+i*dy,x=c.x+j*dx;if(dist(c.y,c.x,y,x)<=R+step*0.7) out.push({y,x,r:Math.round(step*0.75)})}
   return out;
@@ -203,19 +203,33 @@ function cells(c,R){
 function searchCell(kw,cell){
   return new Promise(res=>{
     const acc=[];
+    const opt=cell?{location:new kakao.maps.LatLng(cell.y,cell.x),radius:Math.min(cell.r,20000),sort:kakao.maps.services.SortBy.DISTANCE}:{};
     ps.keywordSearch(kw,(d,s,pg)=>{
       if(s===kakao.maps.services.Status.OK){acc.push(...d);if(pg.hasNextPage) return pg.nextPage()}
       res(acc);
-    },{location:new kakao.maps.LatLng(cell.y,cell.x),radius:cell.r,sort:kakao.maps.services.SortBy.DISTANCE});
+    },opt);
   });
 }
+const shortArea=label=>{const t=(label||"").split(/\s+/).filter(w=>/(동|읍|면|가|리|구)$/.test(w));return t.length?t.slice(-2).join(" "):""};
 async function run(){
   busy=true;$("go").disabled=true;
-  const R=+$("radius").value, kws=["족발"].concat($("bossam").checked?["보쌈"]:[]);
-  const cs=cells(center,R), found=new Map(); let done=0;
-  for(const cell of cs) for(const kw of kws){
-    (await searchCell(kw,cell)).forEach(p=>found.set(p.id,p));
-    done++; msg("찾는 중… "+done+"/"+(cs.length*kws.length)+" · "+found.size+"곳");
+  const R=+$("radius").value, kws=["족발","족발집"].concat($("bossam").checked?["보쌈"]:[]);
+  const found=new Map(); let full=false;
+  for(const kw of kws){
+    const r=await searchCell(kw,{y:center.y,x:center.x,r:R});
+    r.forEach(p=>found.set(p.id,p)); if(r.length>=45) full=true;
+    msg("찾는 중… "+found.size+"곳");
+  }
+  if(full){
+    const cs=cells(center,R); let done=0;
+    for(const cell of cs) for(const kw of kws.filter(k=>k!=="족발집")){
+      (await searchCell(kw,cell)).forEach(p=>found.set(p.id,p));
+      done++; msg("업체가 많아 구역을 나눠 찾는 중… "+done+"/"+(cs.length*2)+" · "+found.size+"곳");
+    }
+  }
+  const area=shortArea(center.label);
+  if(area) for(const kw of ["족발"].concat($("bossam").checked?["보쌈"]:[])){
+    (await searchCell(area+" "+kw,null)).forEach(p=>found.set(p.id,p));
   }
   rows=[...found.values()].filter(p=>p.category_group_code==="FD6"&&/족발|보쌈/.test(p.category_name+p.place_name))
     .map(p=>({id:p.id,n:p.place_name,cat:p.category_name.split(">").pop().trim(),a:p.road_address_name||p.address_name,t:p.phone,url:p.place_url,y:+p.y,x:+p.x,d:dist(center.y,center.x,+p.y,+p.x)}))
